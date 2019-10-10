@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                          break;
                        case ConnectionState.active:
                          // TODO: Handle this case.
-                        return _loading();
+                           return _loading();
                          break;
                        case ConnectionState.done:
                          // TODO: Handle this case.
@@ -73,11 +73,9 @@ class _HomePageState extends State<HomePage> {
                                     return _drawCard(snapshot.data[pos]);
                                },
                                itemCount: snapshot.data.length,
-
                              );
                            }
-                         }
-                         
+                         }                        
                          break;
                      }
                       return Container(); 

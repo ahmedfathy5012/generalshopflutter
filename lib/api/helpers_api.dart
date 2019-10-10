@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 
+import 'package:generalshop/exeptions/redirection_found.dart';
+import 'package:generalshop/exeptions/resource_not_found.dart';
 import 'package:generalshop/utility/country.dart';
 import 'package:generalshop/product/product_category.dart';
 import 'package:generalshop/product/product_tag.dart';
@@ -22,15 +24,34 @@ class HelpersApi{
       String url = ApiUtil.CATEGORIES + '?page=' + page.toString() ;
       http.Response response = await http.get(url ,headers:headers);
       List<ProductCategory> categories = [];
-      if(response.statusCode==200){
-         var body = jsonDecode(response.body);
-         for(var item in body['data']){
-             categories.add(
-               ProductCategory.fromJson(item)
-             );
-         }
+      switch (response.statusCode) {
+        case 200:
+          var body = jsonDecode(response.body);
+          for(var item in body['data']){
+            categories.add(
+                ProductCategory.fromJson(item)
+            );
+          }
+          return categories;
+          break;
+
+        case 404:
+          throw ResourceNotFound();
+          break;
+
+
+        case 301:
+        case 302:
+        case 303:
+          throw RedirectionFound();
+          break;
+
+
+
+        default:
       }
-      return categories;
+
+
    }
 
 
@@ -38,15 +59,34 @@ class HelpersApi{
       String url = ApiUtil.TAGS + '?page=' + page.toString();
       http.Response response = await http.get(url ,headers:headers);
       List<ProductTag> tags = [];
-      if(response.statusCode==200){
-           var body = jsonDecode(response.body);
-         for(var item in body['data']){
-             tags.add(
-               ProductTag.fromJson(item)
-             );
-         }
+      switch (response.statusCode) {
+        case 200:
+          var body = jsonDecode(response.body);
+          for(var item in body['data']){
+            tags.add(
+                ProductTag.fromJson(item)
+            );
+          }
+          return tags;
+          break;
+
+        case 404:
+          throw ResourceNotFound();
+          break;
+
+
+        case 301:
+        case 302:
+        case 303:
+          throw RedirectionFound();
+          break;
+
+
+
+        default:
       }
-      return tags;
+
+
    }
 
 
@@ -54,15 +94,34 @@ class HelpersApi{
       String url = ApiUtil.COUNTRIES + '?page=' + page.toString();
       http.Response response = await http.get(url ,headers:headers);
       List<Country> countries = [];
-      if(response.statusCode==200){
+      switch (response.statusCode) {
+        case 200:
           var body = jsonDecode(response.body);
-         for(var item in body['data']){
-             countries.add(
-               Country.fromJson(item)
-             );
-         }
+          for(var item in body['data']){
+            countries.add(
+                Country.fromJson(item)
+            );
+          }
+          return countries;
+          break;
+
+        case 404:
+          throw ResourceNotFound();
+          break;
+
+
+        case 301:
+        case 302:
+        case 303:
+          throw RedirectionFound();
+          break;
+
+
+
+        default:
       }
-      return countries;
+
+
    }
 
 
@@ -70,15 +129,31 @@ class HelpersApi{
       String url = ApiUtil.CITIES(country) + '?page=' + page.toString();
       http.Response response = await http.get(url ,headers:headers);
       List<CountryCity> cities = [];
-      if(response.statusCode==200){
+      switch (response.statusCode) {
+        case 200:
           var body = jsonDecode(response.body);
-         for(var item in body['data']){
+           for(var item in body['data']){
              cities.add(
                CountryCity.fromJson(item)
              );
          }
+         return cities;
+          break;
+        case 404:
+          return throw ResourceNotFound();
+          break;
+
+        case 301:
+        case 302:
+        case 303:
+          throw RedirectionFound();
+          break;
+
+
+        default:
       }
-      return cities;
+     
+      return null;
    }
   
 
@@ -86,15 +161,34 @@ class HelpersApi{
         String url = ApiUtil.STATES(country) + '?page=' + page.toString();
         http.Response response = await http.get(url ,headers:headers);
         List<CountryState> states = [];
-        if(response.statusCode==200){
+        switch (response.statusCode) {
+          case 200:
           var body = jsonDecode(response.body);
-         for(var item in body['data']){
+          for(var item in body['data']){
              states.add(
-               CountryState.fromJson(item)
+              CountryState.fromJson(item)
              );
          }
+          return states;
+            break;
+
+          case 404:
+             throw ResourceNotFound();
+            break;
+
+
+          case 301:
+          case 302:
+          case 303:
+            throw RedirectionFound();
+            break;
+
+
+
+          default:
         }
-        return states;
+
+        return null;
    }
 
 }
