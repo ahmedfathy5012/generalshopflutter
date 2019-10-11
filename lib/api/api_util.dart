@@ -1,3 +1,6 @@
+import 'package:connectivity/connectivity.dart';
+import 'package:generalshop/exeptions/exeptions.dart';
+
 class ApiUtil{
   static const String MAIN_API_URL = "http://192.168.1.2/generalshop/public/api/";
   static const String AUTH_REGISTER = MAIN_API_URL + 'auth/register';
@@ -10,4 +13,13 @@ class ApiUtil{
 
   static String CITIES(int id) { return MAIN_API_URL + 'countries/' + id.toString() + '/cities';}
   static String STATES(int id) { return MAIN_API_URL + 'countries/' + id.toString() + '/states';}
+}
+
+
+
+Future<void> CheckInternet()async{
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult != ConnectivityResult.mobile ) {
+    throw NoInternetConnection();
+  }
 }

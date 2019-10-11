@@ -1,8 +1,7 @@
 import 'dart:developer';
 
 
-import 'package:generalshop/exeptions/redirection_found.dart';
-import 'package:generalshop/exeptions/resource_not_found.dart';
+import 'package:generalshop/exeptions/exeptions.dart';
 import 'package:generalshop/utility/country.dart';
 import 'package:generalshop/product/product_category.dart';
 import 'package:generalshop/product/product_tag.dart';
@@ -11,7 +10,7 @@ import 'package:generalshop/utility/country_state.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'api_util.dart';
-
+import 'package:connectivity/connectivity.dart';
 
 class HelpersApi{
    
@@ -21,11 +20,13 @@ class HelpersApi{
 
 
   Future<List<ProductCategory>> fetchCategory(int page)async{
+    await CheckInternet();
       String url = ApiUtil.CATEGORIES + '?page=' + page.toString() ;
       http.Response response = await http.get(url ,headers:headers);
-      List<ProductCategory> categories = [];
+
       switch (response.statusCode) {
         case 200:
+          List<ProductCategory> categories = [];
           var body = jsonDecode(response.body);
           for(var item in body['data']){
             categories.add(
@@ -36,7 +37,7 @@ class HelpersApi{
           break;
 
         case 404:
-          throw ResourceNotFound();
+          throw ResourceNotFound('Categories');
           break;
 
 
@@ -49,18 +50,21 @@ class HelpersApi{
 
 
         default:
+          return null;
+          break;
       }
-
 
    }
 
 
   Future<List<ProductTag>> fetchTags(int page)async{
+    await CheckInternet();
       String url = ApiUtil.TAGS + '?page=' + page.toString();
       http.Response response = await http.get(url ,headers:headers);
-      List<ProductTag> tags = [];
+
       switch (response.statusCode) {
         case 200:
+          List<ProductTag> tags = [];
           var body = jsonDecode(response.body);
           for(var item in body['data']){
             tags.add(
@@ -71,7 +75,7 @@ class HelpersApi{
           break;
 
         case 404:
-          throw ResourceNotFound();
+          throw ResourceNotFound('Tags');
           break;
 
 
@@ -84,18 +88,22 @@ class HelpersApi{
 
 
         default:
+          return null;
+          break;
       }
 
 
    }
 
 
-  Future<List<Country>> fetchCountries(int page)async{ 
+  Future<List<Country>> fetchCountries(int page)async{
+    await CheckInternet();
       String url = ApiUtil.COUNTRIES + '?page=' + page.toString();
       http.Response response = await http.get(url ,headers:headers);
-      List<Country> countries = [];
+
       switch (response.statusCode) {
         case 200:
+          List<Country> countries = [];
           var body = jsonDecode(response.body);
           for(var item in body['data']){
             countries.add(
@@ -106,7 +114,7 @@ class HelpersApi{
           break;
 
         case 404:
-          throw ResourceNotFound();
+          throw ResourceNotFound('Countries');
           break;
 
 
@@ -119,6 +127,8 @@ class HelpersApi{
 
 
         default:
+          return null;
+          break;
       }
 
 
@@ -128,9 +138,10 @@ class HelpersApi{
   Future<List<CountryCity>> fetchCities(int country ,int page)async{
       String url = ApiUtil.CITIES(country) + '?page=' + page.toString();
       http.Response response = await http.get(url ,headers:headers);
-      List<CountryCity> cities = [];
+      await CheckInternet();
       switch (response.statusCode) {
         case 200:
+          List<CountryCity> cities = [];
           var body = jsonDecode(response.body);
            for(var item in body['data']){
              cities.add(
@@ -140,7 +151,7 @@ class HelpersApi{
          return cities;
           break;
         case 404:
-          return throw ResourceNotFound();
+          return throw ResourceNotFound('Cities');
           break;
 
         case 301:
@@ -151,18 +162,22 @@ class HelpersApi{
 
 
         default:
+          return null;
+          break;
       }
      
-      return null;
+
    }
   
 
   Future<List<CountryState>> fetchStates(int country , int page)async{
+        await CheckInternet();
         String url = ApiUtil.STATES(country) + '?page=' + page.toString();
         http.Response response = await http.get(url ,headers:headers);
-        List<CountryState> states = [];
+
         switch (response.statusCode) {
           case 200:
+            List<CountryState> states = [];
           var body = jsonDecode(response.body);
           for(var item in body['data']){
              states.add(
@@ -173,7 +188,7 @@ class HelpersApi{
             break;
 
           case 404:
-             throw ResourceNotFound();
+             throw ResourceNotFound('States');
             break;
 
 
@@ -186,9 +201,12 @@ class HelpersApi{
 
 
           default:
+            return null;
+            break;
         }
 
-        return null;
+
    }
+
 
 }

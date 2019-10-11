@@ -9,8 +9,12 @@ import 'package:generalshop/product/product_tag.dart';
 import 'package:generalshop/utility/country.dart';
 import 'package:generalshop/utility/country_city.dart';
 import 'package:generalshop/utility/country_state.dart';
+import 'package:generalshop/exeptions/exeptions.dart';
+import 'package:connectivity/connectivity.dart';
 void main() {
-  runApp(GeneralShop());
+
+
+   runApp(GeneralShop());
 }
 
 class GeneralShop extends StatelessWidget{
@@ -33,8 +37,8 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
- // Authentication authentication = Authentication();
- // ProductApi productApi = ProductApi();
+ Authentication authentication = Authentication();
+ ProductApi productApi = ProductApi();
   HelpersApi helpersApi = HelpersApi();
 
   @override
@@ -45,7 +49,7 @@ class _HomePageState extends State<HomePage> {
         title: Text('General Shop'),
       ),
       body: FutureBuilder(
-              future: helpersApi.fetchStates(1,1),
+              future: helpersApi.fetchCities(15,1),
               builder: (BuildContext context ,AsyncSnapshot snapshot){
                      switch(snapshot.connectionState){
                      case ConnectionState.none:
@@ -63,7 +67,21 @@ class _HomePageState extends State<HomePage> {
                        case ConnectionState.done:
                          // TODO: Handle this case.
                          if(snapshot.hasError){
-                           return _error(snapshot.error.toString());
+
+//                           switch(snapshot.error){
+//                             case LoginFailed:
+//                               return _error('User Name Is Not Correct');
+//                               break;
+//                             case ResourceNotFound:
+//                               return _error('Resource Not Found');
+//                               break;
+//                           }
+                           if(snapshot.error is NoInternetConnection){
+                             return _error('No internet');
+                           }else{
+                             return _error(snapshot.error.toString());
+                           }
+                          // return _error(snapshot.error.toString());
                          }else{
                            if(!snapshot.hasData){
                              return _error('No Data');
@@ -88,7 +106,7 @@ class _HomePageState extends State<HomePage> {
      return Card(
          child: Padding(
            padding: EdgeInsets.all(16),
-           child: Text(item.state_name),
+           child: Text(item.city_name),
          ),
      );
   }

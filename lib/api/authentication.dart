@@ -2,6 +2,8 @@ import 'package:generalshop/customer/user.dart';
 import 'package:http/http.dart' as http;
 import 'api_util.dart';
 import 'dart:convert';
+import 'package:generalshop/exeptions/exeptions.dart';
+import 'package:connectivity/connectivity.dart';
 class Authentication{
   Future<User> register(String first_name , String last_name , String email , String password) async{
         Map<String,String> headers = {
@@ -15,15 +17,18 @@ class Authentication{
         };
         http.Response response = await http.post(ApiUtil.AUTH_REGISTER , headers: headers , body: body);
 
-        if(response.statusCode==201){
-          // Success User Register
-          var body  = jsonDecode(response.body);
-          var data = body['data'];
-          print(data);
-          return User.fromJson(data);
+        switch(response.statusCode){
+          case 201:
+            var body = jsonDecode(response.body);
+            var data = body['data'];
+            return User.fromJson(data);
+            break;
+          case 422:
+            throw UnProcessedEntity();
+          default:
+            return null;
+            break;
         }
-        print('false');
-        return null;
   }
 
   Future<User> login(String email , String password) async{
@@ -36,17 +41,25 @@ class Authentication{
     };
 
     http.Response response = await http.post(ApiUtil.AUTH_LOGIN,headers: headers , body:  body);
-    print(response.statusCode);
-    if(response.statusCode==200){
-      // Login Success
-      var body = jsonDecode(response.body);
-      var data = body['data'];
-      print('true');
-      print(data);
-      return User.fromJson(data);
-    }
-    print('false');
-    return null;
-
+     print(response.statusCode);
+     switch(response.statusCode){
+       case 200:
+         var body = jsonDecode(response.body);
+         var data = body['data'];
+         return User.fromJson(data);
+         break;
+       case 404:
+           throw ResourceNotFound('User');
+         break;
+       case 401:
+         throw LoginFailed();
+         break;
+       default:
+         return null;
+         break;
+     }
   }
+
+
+
 }
