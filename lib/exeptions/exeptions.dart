@@ -46,3 +46,14 @@ class NoInternetConnection implements Exception{
     return "No Internet connection avaliable";
   }
 }
+
+
+class PropertyIsRequired implements Exception{
+  String field;
+  PropertyIsRequired(this.field);
+  @override
+  String toString() {
+    // TODO: implement toString
+     return 'Property ${this.field} Is Required';
+  }
+}

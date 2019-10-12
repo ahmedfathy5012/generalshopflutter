@@ -5,10 +5,14 @@ import 'dart:convert';
 import 'package:generalshop/exeptions/exeptions.dart';
 import 'package:connectivity/connectivity.dart';
 class Authentication{
+
+  Map<String,String> headers = {
+    'Accept' : 'aplicatio/json'
+  };
+
   Future<User> register(String first_name , String last_name , String email , String password) async{
-        Map<String,String> headers = {
-          'Accept' : 'aplicatio/json'
-        };
+    await CheckInternet();
+
         Map<String,String> body = {
           'first_name' : first_name,
           'last_name' : last_name,
@@ -32,9 +36,8 @@ class Authentication{
   }
 
   Future<User> login(String email , String password) async{
-    Map<String,String> headers = {
-      'Accept' : 'aplication/json'
-    };
+    await CheckInternet();
+
     Map<String,String> body = {
       'email' : email,
       'password' : password,

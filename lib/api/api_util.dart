@@ -19,7 +19,7 @@ class ApiUtil{
 
 Future<void> CheckInternet()async{
   var connectivityResult = await (Connectivity().checkConnectivity());
-  if (connectivityResult != ConnectivityResult.mobile ) {
+  if (connectivityResult != ConnectivityResult.mobile && connectivityResult != ConnectivityResult.wifi) {
     throw NoInternetConnection();
   }
 }

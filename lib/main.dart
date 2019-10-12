@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
         title: Text('General Shop'),
       ),
       body: FutureBuilder(
-              future: helpersApi.fetchCities(15,1),
+              future: helpersApi.fetchCategory(2),
               builder: (BuildContext context ,AsyncSnapshot snapshot){
                      switch(snapshot.connectionState){
                      case ConnectionState.none:
@@ -106,7 +106,17 @@ class _HomePageState extends State<HomePage> {
      return Card(
          child: Padding(
            padding: EdgeInsets.all(16),
-           child: Text(item.city_name),
+           child: Row(
+             children: <Widget>[
+               Text(item.category_name),
+               Flexible(
+                 child: Image(
+                     fit: BoxFit.contain,
+                     image: NetworkImage(item.image_url)),
+               )
+
+             ],
+           ),
          ),
      );
   }

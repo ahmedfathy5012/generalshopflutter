@@ -9,7 +9,7 @@ class ProductApi{
     };
 
   Future<List<Product>> fetchProducts(int page) async{
-   
+    await CheckInternet();
      String url = ApiUtil.PRODUCTS + '?page=' + page.toString() ; 
      http.Response response = await http.get(url, headers: headers);
      
@@ -28,6 +28,7 @@ class ProductApi{
 
 
   Future<Product> fetchProduct(int product_id)async{
+    await CheckInternet();
     String url = ApiUtil.PRODUCT + product_id.toString();
     http.Response response = await http.get(url, headers: headers);
     if(response.statusCode==200){

@@ -4,6 +4,9 @@ import 'product_unit.dart';
 import 'product_category.dart';
 import 'product_tag.dart';
 import 'package:generalshop/review/product_reviews.dart';
+import 'package:generalshop/exeptions/exeptions.dart';
+
+
 class Product {
    int product_id;
    String product_title , product_description ;
@@ -22,6 +25,20 @@ class Product {
 
 
   Product.fromJson(Map<String , dynamic> jsonObject){
+
+    assert(jsonObject['product_id'] != null            , 'Product Id Is Null');
+    assert(jsonObject['product_title'] != null         , 'Product Id Title Null');
+    assert(jsonObject['product_description'] != null   , 'Product Id Description Null');
+    assert(jsonObject['product_price'] != null         , 'Product Id Price Null');
+
+
+
+               if(jsonObject['product_id'] == null)             throw PropertyIsRequired('Product ID');
+               if(jsonObject['product_title'] == null)          throw PropertyIsRequired('Product Title');
+               if(jsonObject['product_description'] == null)    throw PropertyIsRequired('Product Description');
+               if(jsonObject['product_price'] == null)          throw PropertyIsRequired('Product Price');
+
+
           this.product_id = jsonObject['product_id'];
           this.product_title = jsonObject['product_title'];
           this.product_description = jsonObject['product_description'];
@@ -30,6 +47,7 @@ class Product {
           this.product_total = double.tryParse(jsonObject['product_total']);
           this.product_discount = double.tryParse(jsonObject['product_discount']);
           this.productCategory = ProductCategory.fromJson(jsonObject['product_category']);
+
           this.tags = [];
           if(jsonObject['product_tags'] !=null){
              _setTags(jsonObject['product_tags']);

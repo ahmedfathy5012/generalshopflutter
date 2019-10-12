@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:generalshop/exeptions/exeptions.dart';
 
 
 class User{
@@ -15,6 +15,21 @@ class User{
 
 
   User.fromJson(Map<String,dynamic> jsonObject){   // create user through user data
+
+
+    assert(jsonObject['user_id'] != null     ,'User ID Is Null');
+    assert(jsonObject['first_name'] != null  ,'First Name Is Null');
+    assert(jsonObject['last_name'] != null   ,'Last Name Is Null');
+    assert(jsonObject['api_token'] != null   ,'Api Token Is Null');
+    assert(jsonObject['email'] != null       ,'Email Is Null');
+
+    if(jsonObject['user_id'] == null )        throw PropertyIsRequired('User Id');
+    if(jsonObject['first_name'] == null )     throw PropertyIsRequired('First Name');
+    if(jsonObject['Last_name'] == null )      throw PropertyIsRequired('Last Name');
+    if(jsonObject['api_token'] == null )      throw PropertyIsRequired('Api Token');
+    if(jsonObject['email'] == null )          throw PropertyIsRequired('Email');
+
+
       this.user_id = jsonObject['user_id'];
       this.first_name = jsonObject['first_name'];
       this.last_name = jsonObject['last_name'];
