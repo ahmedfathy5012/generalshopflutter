@@ -21,7 +21,7 @@ class ProductCategory {
 
     this.category_id = jsonObject['category_id'];
     this.category_name = jsonObject['category_name'];
-    this.image_direction = jsonObject['iamge_direction'];
+    this.image_direction = jsonObject['image_direction'];
     this.image_url = jsonObject['image_url'];
 
   }
