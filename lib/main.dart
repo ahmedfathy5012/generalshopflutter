@@ -51,6 +51,7 @@ class _HomePageState extends State<HomePage> {
       body: FutureBuilder(
               future: helpersApi.fetchCategory(2),
               builder: (BuildContext context ,AsyncSnapshot snapshot){
+                print(snapshot.data);
                      switch(snapshot.connectionState){
                      case ConnectionState.none:
                          // TODO: Handle this case.
@@ -86,14 +87,23 @@ class _HomePageState extends State<HomePage> {
                            if(!snapshot.hasData){
                              return _error('No Data');
                            }else{
+
                              return ListView.builder(
                                itemBuilder: (BuildContext context , int pos){
-                                    return _drawCard(snapshot.data[pos]);
+
+                                 ProductCategory category = snapshot.data[pos];
+                                 print(category.image_direction);
+                                 if(category.image_direction == 'left'){
+                                   return _drawLeftCard(category);
+                                 }else{
+                                   return _drawRightCard(category);
+                                 }
+
                                },
                                itemCount: snapshot.data.length,
                              );
                            }
-                         }                        
+                         }
                          break;
                      }
                       return Container(); 
@@ -101,19 +111,41 @@ class _HomePageState extends State<HomePage> {
         
     );
   }
-  
-  _drawCard(dynamic item){
+
+
+  _drawLeftCard(dynamic item){
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Row(
+          children: <Widget>[
+//            Flexible(
+//              child: Image(
+//                  fit: BoxFit.contain,
+//                  image: NetworkImage(item.image_url)),
+//            ),
+            Text('kjhjkhjlhljkljk           '),
+            Text(item.category_name),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  _drawRightCard(dynamic item){
      return Card(
          child: Padding(
            padding: EdgeInsets.all(16),
            child: Row(
              children: <Widget>[
                Text(item.category_name),
-               Flexible(
-                 child: Image(
-                     fit: BoxFit.contain,
-                     image: NetworkImage(item.image_url)),
-               )
+               Text('         kjhjkhjlhljkljk'),
+//               Flexible(
+//                 child: Image(
+//                     fit: BoxFit.contain,
+//                     image: NetworkImage(item.image_url)),
+//               )
 
              ],
            ),

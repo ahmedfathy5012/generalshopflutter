@@ -29,7 +29,7 @@ class HelpersApi{
           List<ProductCategory> categories = [];
           var body = jsonDecode(response.body);
           for(var item in body['data']){
-            print(item);
+           // print(item);
             categories.add(
                 ProductCategory.fromJson(item)
             );
