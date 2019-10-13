@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'onboarding_model.dart';
 import 'onboarding_screen.dart';
+import '../utilities/screen_utilities.dart';
 
 class OnBoarding extends StatefulWidget {
   @override
@@ -10,19 +11,23 @@ class OnBoarding extends StatefulWidget {
 class _OnBoardingState extends State<OnBoarding> {
 
   PageController _pageController;
+  double screenWidth;
+  double screenHeight;
+  int currentIndex =0 ;
+  bool lastPage = false ;
 
   List<OnBoardingModel> screens = [
-    OnBoardingModel(image: "assets/images/onboarding1.jpg" ,
+    OnBoardingModel(image: "assets/images/onboarding.png" ,
                     title: "Welcome",
                     description: "Now were up in the big leagues gettingour turn at bat . The Brady Bunch that's the way we Brady Bunch..",
     ),
 
-    OnBoardingModel(image: "assets/images/onboarding2.jpg" ,
+    OnBoardingModel(image: "assets/images/onboarding.png" ,
       title: "Add To Cart",
       description: "Now were up in the big leagues gettingour turn at bat . The Brady Bunch that's the way we Brady Bunch..",
     ),
 
-    OnBoardingModel(image: "assets/images/onboarding3.jpg" ,
+    OnBoardingModel(image: "assets/images/onboarding.png" ,
       title: "Enjoy Purchase",
       description: "Now were up in the big leagues gettingour turn at bat . The Brady Bunch that's the way we Brady Bunch..",
     ),
@@ -48,22 +53,101 @@ class _OnBoardingState extends State<OnBoarding> {
 
   @override
   Widget build(BuildContext context) {
+
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    double _mt =  screenHeight*0.15;
+
+
+
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
+      backgroundColor: Colors.white,
+      body:Column(
+        children: <Widget>[
+           Flexible(
+                        child: Container(
+        padding: EdgeInsets.only(top: _mt),
+        height: screenHeight,
+        width:  screenWidth,
         child: PageView.builder(
           controller: _pageController,
           itemCount: screens.length,
           itemBuilder: (BuildContext context , int position){
-            return SingleOnBoarding(screens[position]);
+              return SingleOnBoarding(screens[position]);
+          },
+          onPageChanged: (int index){
+            setState(() {
+             currentIndex = index;
+             if(index == screens.length-1){
+               lastPage = true;
+             }else{
+               lastPage = false;
+             }
+            });
           },
         ),
       ),
+           ),
+      
+      Transform.translate(
+        offset: Offset(0,-(screenHeight*.1)),
+              child: Container(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _drawDots(screens.length),            
+          ),
+        ),
+      ),
+
+        (lastPage)? _showButton() : Container() ,  // START BUTTON
+      
+        ],
+      ),
     );
+  }
+
+
+  Widget _showButton(){
+    return  Container(
+         child: Transform.translate(
+           offset: Offset(0,-(screenHeight*.05)),
+           child: SizedBox(
+             width: screenWidth*0.75,
+             height: 60,
+               child: RaisedButton(
+                 shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(34)),
+                 color: ScreenUtilties.mainBlue,
+               onPressed: (){},
+               child: Text('START',
+               style: TextStyle(
+                 color: Colors.white,
+                 fontWeight: FontWeight.bold,
+                 fontSize: 15,
+                 letterSpacing: 3,
+               ),
+               ),
+             ),
+           ),
+         ),
+       );
+  }
+
+  List<Widget> _drawDots(int qty){
+    List<Widget> widgets = [] ;
+    for (var i = 0; i < qty; i++) {
+      widgets.add(
+        Container(
+                  decoration: BoxDecoration(
+                 color: (i == currentIndex)? ScreenUtilties.mainBlue : ScreenUtilties.lightGrey , 
+                 borderRadius: BorderRadius.circular(5)
+                ),
+                width: 30,
+                height: 6,       
+                margin: (i==(qty-1))? EdgeInsets.only(right: 0) : EdgeInsets.only(right: 24)
+                        
+              ),
+      );
+    }
+    return widgets;
   }
 }
