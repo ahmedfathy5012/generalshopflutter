@@ -19,9 +19,9 @@ class HelpersApi{
     };
 
 
-  Future<List<ProductCategory>> fetchCategory(int page)async{
+  Future<List<ProductCategory>> fetchCategories()async{
     await CheckInternet();
-      String url = ApiUtil.CATEGORIES + '?page=' + page.toString() ;
+      String url = ApiUtil.CATEGORIES;
       http.Response response = await http.get(url ,headers:headers);
 
       switch (response.statusCode) {

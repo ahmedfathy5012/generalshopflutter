@@ -3,7 +3,8 @@ import 'onboarding_model.dart';
 import 'onboarding_screen.dart';
 import '../utilities/screen_utilities.dart';
 import '../utilities/screen_config.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../home_page.dart';
 
 class OnBoarding extends StatefulWidget {
   @override
@@ -122,16 +123,26 @@ class _OnBoardingState extends State<OnBoarding> {
 
 
   Widget _showButton(){
+    
+    double offset = (screenConfig1.screenType == ScreenType.SMALL) ? 0.05 : 0.1 ;
+    
     return  Container(
          child: Transform.translate(
-           offset: Offset(0,-(screenHeight*.1)),
+           offset: Offset(0,-(screenHeight*offset)),
            child: SizedBox(
              width: screenWidth*0.75,
              height: widgetSize.buttonHeight,
                child: RaisedButton(
                  shape: RoundedRectangleBorder(borderRadius:  BorderRadius.circular(34)),
                  color: ScreenUtilties.mainBlue,
-               onPressed: (){},
+               onPressed: () async{
+                 var pref = await SharedPreferences.getInstance();
+                 pref.setBool('is_seen',true);
+                 Navigator.push(
+                   context,
+                   MaterialPageRoute(builder: (context)=>HomePage())
+                 );
+               },
                child: Text('START',
                style: TextStyle(
                  color: Colors.white,
