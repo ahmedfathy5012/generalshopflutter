@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:generalshop/product/product.dart';
 import 'package:generalshop/product/product_category.dart';
 import 'utilities/screen_utilities.dart';
 import 'utilities/screen_config.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:generalshop/api/helpers_api.dart';
 import 'utilities/helpers_widgets.dart';
+import 'package:generalshop/product/home_product.dart';
+import 'utilities/helpers_widgets.dart';
+
+
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -12,15 +18,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
   TabController tabController;
+  int currentIndex = 0;
+
   
+  List<ProductCategory> productsCategories;
+
+
   ScreenConfig screenConfig;
   WidgetSize widgetSize;
   HelpersApi helpersApi = HelpersApi();
+  HomeProductBlock homeProductBlock = HomeProductBlock();
 
   @override
   void initState() {
     // TODO: implement initState
+    
     super.initState();
+
                 
   }
 
@@ -28,6 +42,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
   void dispose() {
     // TODO: implement dispose
     tabController.dispose();
+    homeProductBlock.dispose();
     super.dispose();
   }
 
@@ -54,7 +69,8 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
              if(!snapshot.hasData){
                return HelperWidgets().error('No Data');
              }else{
-              
+              this.productsCategories = snapshot.data;
+              homeProductBlock.fetchProducts.add(productsCategories[0].category_id);
                return _screen(snapshot.data);
              }
            }
@@ -93,16 +109,75 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
           controller: tabController,
           isScrollable: true,
           tabs: _tabs(categories),
+          onTap: (int index){
+            homeProductBlock.fetchProducts.add(this.productsCategories[index].category_id);
+          },
         ),
       ),
 
 
       body: Container(
-         
+        child: StreamBuilder(
+           stream: homeProductBlock.productsStrem,
+           builder: (BuildContext context , AsyncSnapshot<List<Product>> snapshot){
+             switch(snapshot.connectionState){
+               
+               case ConnectionState.none:
+                 // TODO: Handle this case.
+                return HelperWidgets().error('No Thing Is Working');
+                 break;
+               case ConnectionState.waiting:               
+                 // TODO: Handle this case.
+                return HelperWidgets().loading();
+                 break;                                
+               case ConnectionState.done:
+               case ConnectionState.active:
+                 // TODO: Handle this case.
+                 if(snapshot.hasError){
+                   return HelperWidgets().error(snapshot.error.toString());
+                 }else{
+                   if(!snapshot.hasData){
+                     return HelperWidgets().error('No Data');
+                   }else{
+                     return _drawProducts(snapshot.data);
+                   }
+                 }
+                 break;
+             }
+             return Container();
+           },
+        ),
       ),
     );
   }
 
+
+
+  Widget _drawProducts(List<Product> products)  {
+     return  Container(
+       child: Column(
+         children: <Widget>[
+           
+               Flexible(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                 itemCount: products.length,
+                 itemBuilder: (context , position){
+                   return Card(
+                     child: Container(
+                     child: Image(image: NetworkImage(products[position].featuredImage()),), 
+                  //  child: Image(image: NetworkImage('https://lorempixel.com/1000/600/?46119')), 
+                 //  child: Text(products[position].product_title),
+                     ),
+                   );
+                 },
+             ),
+               ),
+           
+         ],
+       ),
+     );
+  }
 
   List<Tab> _tabs(List<ProductCategory> categories){
      List<Tab> tabs = [];

@@ -13,7 +13,7 @@ class Reviewer{
     assert(jsonObject['formatted_name'] != null  ,'Formatted Name Is Null');
 
     if(jsonObject['first_name'] == null )     throw PropertyIsRequired('First Name');
-    if(jsonObject['Last_name'] == null )     throw PropertyIsRequired('Last Name!');
+    if(jsonObject['last_name'] == null )     throw PropertyIsRequired('Last Name!');
     if(jsonObject['email'] == null )     throw PropertyIsRequired('Email');
     if(jsonObject['formatted_name'] == null )     throw PropertyIsRequired('Formatted Name');
 

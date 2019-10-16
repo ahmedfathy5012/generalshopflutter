@@ -77,7 +77,7 @@ class Product {
               }        
          }
        }
-       
+
   }
 
 
@@ -102,7 +102,15 @@ class Product {
          images.add(image['image_url']);
        }      
      }
-    }
-    
+    }   
+  }
+
+  String featuredImage(){
+     if(this.images.length>0){
+      return this.images[0];
+      // return 'https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500';
+     }
+        return 'https://cdn.pixabay.com/photo/2018/02/09/21/46/rose-3142529__340.jpg';
+     
   }
 }

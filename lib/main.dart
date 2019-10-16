@@ -58,7 +58,7 @@ class GeneralShop extends StatelessWidget{
            fontFamily: "QuickSand",
            fontWeight: FontWeight.w700 , 
          ),
-         labelPadding: EdgeInsets.only(right: 16,left: 16,bottom: 12,top: 16),
+         labelPadding: EdgeInsets.only(right: 16,left: 16,bottom: 12),
          indicatorSize: TabBarIndicatorSize.label,
          unselectedLabelColor: ScreenUtilties.unSelected,
          unselectedLabelStyle: TextStyle(
