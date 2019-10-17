@@ -4,8 +4,6 @@ import 'package:generalshop/product/product.dart';
 
 import 'package:generalshop/contracts/contracts.dart';
 
-import 'package:generalshop/api/helpers_api.dart';
-
 import 'package:generalshop/api/products_api.dart';
 
 
@@ -14,6 +12,7 @@ class HomeProductBlock implements Disposable{
 ProductApi productApi;
 
 List<Product> products;
+
 final StreamController<List<Product>> _productController = StreamController<List<Product>>.broadcast();    // enter point
 final StreamController<int> _categoryController = StreamController<int>.broadcast();                      // first enter point category_id
 
