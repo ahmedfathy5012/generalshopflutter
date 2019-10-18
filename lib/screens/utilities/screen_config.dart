@@ -19,7 +19,7 @@ ScreenConfig(BuildContext context ){
    this.screenWidth = MediaQuery.of(context).size.width;
    this.screenHieght = MediaQuery.of(context).size.height;
    _setScreen();
-   print(screenWidth);
+
 }
 
 

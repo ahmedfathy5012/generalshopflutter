@@ -35,6 +35,42 @@ class GeneralShop extends StatelessWidget{
         backgroundColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
 
+
+
+        textTheme: TextTheme(
+          headline: TextStyle(
+           fontSize: 18,
+           color: ScreenUtilties.textColor,
+           fontFamily: "QuickSand",
+           fontWeight: FontWeight.w700 , 
+         ),
+
+         subhead:TextStyle(
+           fontSize: 16,
+           color: ScreenUtilties.textColor,
+           fontFamily: "QuickSand",
+           fontWeight: FontWeight.w700 , 
+         ),
+
+         display1: TextStyle(
+           fontSize: 16,
+           color: ScreenUtilties.darkerGreyText,
+           fontFamily: "QuickSand",
+           fontWeight: FontWeight.w700 , 
+         ),
+
+         display2: TextStyle(
+           fontSize: 18,
+           letterSpacing: 1.5,
+           height: 1.5,
+           color: ScreenUtilties.darkerGreyText,
+           fontFamily: "QuickSand",
+           fontWeight: FontWeight.w700 , 
+         ),
+        ),
+
+
+
         appBarTheme: AppBarTheme(
          actionsIconTheme: IconThemeData(
             color:  ScreenUtilties.textColor,
@@ -69,6 +105,10 @@ class GeneralShop extends StatelessWidget{
          ),
         ),
        
+
+       floatingActionButtonTheme: FloatingActionButtonThemeData(
+         backgroundColor: ScreenUtilties.mainBlue
+       )
       ),
     );
   }

@@ -22,7 +22,7 @@ class HelpersApi{
   Future<List<ProductCategory>> fetchCategories()async{
     await CheckInternet();
       String url = ApiUtil.CATEGORIES;
-      http.Response response = await http.get(url ,headers:headers);
+      http.Response response = await http.get(url,headers:headers);
 
       switch (response.statusCode) {
         case 200:

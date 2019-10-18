@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:generalshop/product/product.dart';
 import 'package:generalshop/product/product_category.dart';
+import 'package:generalshop/screens/streams/categories_stream.dart';
 import 'utilities/screen_utilities.dart';
 import 'utilities/screen_config.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:generalshop/api/helpers_api.dart';
 import 'utilities/helpers_widgets.dart';
 import 'package:generalshop/product/home_product.dart';
 import 'utilities/helpers_widgets.dart';
 import 'dart:math';
-import 'package:generalshop/screens/streams/dots_stream.dart';
+import 'single_product.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -22,17 +22,20 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
   PageController _pageController;
 
   int currentIndex = 0;
- 
-
   
-  List<ProductCategory> productsCategories;
+  ValueNotifier<int> dotsIndex = ValueNotifier(1);
 
+  List<ProductCategory> productsCategories;
 
   ScreenConfig screenConfig;
   WidgetSize widgetSize;
   HelpersApi helpersApi = HelpersApi();
+  CategoriesStream categoriesStream =CategoriesStream();
   HomeProductBlock homeProductBlock = HomeProductBlock();
-  DotsStream dotsStream = DotsStream();
+  
+  //DotsStream dotsStream = DotsStream();
+
+
 
   @override
   void initState() {
@@ -43,7 +46,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
       initialPage: 1,
       viewportFraction:0.75,
     );
-                
+    
   }
 
   @override
@@ -52,7 +55,8 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
     tabController.dispose();
     _pageController.dispose();
     homeProductBlock.dispose();
-    dotsStream.dispose();
+    categoriesStream.dispose();
+    //dotsStream.dispose();
     super.dispose();
   }
 
@@ -62,7 +66,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
     widgetSize   = WidgetSize(screenConfig);
 
     return FutureBuilder(
-     future: helpersApi.fetchCategories(),
+      future: helpersApi.fetchCategories(),
      builder: (BuildContext context,AsyncSnapshot<List<ProductCategory>> snapshot){
        switch (snapshot.connectionState) {
          case ConnectionState.none:
@@ -70,6 +74,7 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
            break;
         case ConnectionState.waiting:
         case ConnectionState.active:
+        
            return HelperWidgets().loading();
            break;
         case ConnectionState.done:
@@ -188,67 +193,114 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
        padding: EdgeInsets.only(top: 24),
        child: Column(
          children: <Widget>[           
-               Flexible(
-                child: SizedBox(
+               
+                 SizedBox(
                   height: MediaQuery.of(context).size.height*.25,
                    child: PageView.builder(
                    controller: _pageController,
                    scrollDirection: Axis.horizontal,
-                   onPageChanged: (int position){
-                     dotsStream.dotsSink.add(position);
+                   onPageChanged: (int index){
+                     //dotsStream.dotsSink.add(index);
+                     dotsIndex.value = index ;
                    },
                    itemCount: topProducts.length,
                    itemBuilder: (context , position){
-                     return Card(                       
-                        margin: EdgeInsets.only(right: 4.0 , left: 4.0),
-                        shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
-                        clipBehavior: Clip.hardEdge,
-                       child: Container(
-                         child: Image(                        
-                         fit: BoxFit.cover,
-                         image: NetworkImage(topProducts[position].featuredImage()),), 
+                     return InkWell(
+                           onTap: (){
+                          _goToSingleProduct(context, topProducts[position]);
+                          print(topProducts[position].product_title);
+                          },
+                          child: Card(                       
+                          margin: EdgeInsets.only(right: 4.0 , left: 4.0),
+                          shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
+                          clipBehavior: Clip.hardEdge,
+                         child: Container(
+                           child: Image(                        
+                           fit: BoxFit.cover,
+                           image: NetworkImage(topProducts[position].featuredImage()),), 
                     //  child: Image(image: NetworkImage('https://lorempixel.com/1000/600/?46119')), 
                    //  child: Text(products[position].product_title),
+                         ),
                        ),
                      );
                    },
              ),
                 ),
+               
+                      
+
+                   ValueListenableBuilder(
+                      valueListenable: dotsIndex,
+                      builder: (context , value , _){
+                          return Container(
+                            padding: EdgeInsets.only(top: 16.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: _drawDots(topProducts.length, value),
+                            ),
+                          );                         
+                      },
+                   ),
+
+                
+              Flexible(
+               child: Padding(
+                 padding: EdgeInsets.only(right: 4.0 , left: 4.0 , top: 24),
+                 child: GridView.builder(
+                   itemCount: products.length,
+                 gridDelegate:SliverGridDelegateWithFixedCrossAxisCount(
+                   crossAxisCount: 2,
+                   mainAxisSpacing: 8,
+                   crossAxisSpacing: 8,
+                   childAspectRatio: .5,
+                 ),
+                 itemBuilder: (BuildContext context , int position){
+                   return InkWell(
+                        onTap: (){
+                          _goToSingleProduct(context, products[position]);
+                          print(products[position].product_title);
+                        },
+                        child: Column(
+                        children: <Widget>[
+                          SizedBox(
+                              height: 150,
+                              child: Image(
+                              image: NetworkImage(
+                                products[position].featuredImage(),
+                              ),
+                              
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text(products[position].product_title,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16.0),
+                            child: Text(
+                              '\$ ${products[position].product_price.toString()}',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.subhead,
+                            ),
+                          ),
+                        ],
+                     ),
+                   );
+                 },
+                ),
                ),
-               Container(
-                  child: StreamBuilder<int>(
-                    stream: dotsStream.dots,
-                    builder: (context , snapshot){
-
-                      switch(snapshot.connectionState){
-
-                        case ConnectionState.none:
-                          // TODO: Handle this case.
-                          return Container();
-                          break;
-                        case ConnectionState.waiting:
-                          // TODO: Handle this case.
-                          return Container();
-                          break;
-
-                        case ConnectionState.done:
-                        case ConnectionState.active:
-                          // TODO: Handle this case.
-                          return Row(
-                         children: _drawDots(topProducts.length , snapshot.data),
-                           );
-                          break;
-                      }
-                     return Container();
-                    },
-                  ),
-               ),
+              ), 
          ],
        ),
      );
   }
   
-  
+
+
+
  List<Widget> _drawDots(int qty, int index){
     List<Widget> widgets = [] ;
        for (var i = 0; i < qty; i++) {
@@ -279,5 +331,14 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
        );
      }
      return tabs;
+  }
+
+
+  _goToSingleProduct(BuildContext context,Product product){
+       Navigator.push(context, MaterialPageRoute(
+         builder: (context){
+           return SingleProduct(product);
+         }
+       ));
   }
 }
