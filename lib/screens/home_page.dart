@@ -215,7 +215,16 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
                           shape: RoundedRectangleBorder(borderRadius:BorderRadius.circular(10)),
                           clipBehavior: Clip.hardEdge,
                          child: Container(
-                           child: Image(                        
+                           child: Image(
+                             loadingBuilder: (BuildContext context , image , ImageChunkEvent loadingProgress){
+                                     if(loadingProgress == null){
+                                       return image;
+                                     }else{
+                                       return Center(
+                                         child: CircularProgressIndicator(),
+                                       );
+                                     }
+                             },                        
                            fit: BoxFit.cover,
                            image: NetworkImage(topProducts[position].featuredImage()),), 
                     //  child: Image(image: NetworkImage('https://lorempixel.com/1000/600/?46119')), 
@@ -265,6 +274,15 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
                           SizedBox(
                               height: 150,
                               child: Image(
+                                loadingBuilder: (BuildContext context , image , ImageChunkEvent loadingProgress){
+                                     if(loadingProgress == null){
+                                       return image;
+                                     }else{
+                                       return Center(
+                                         child: CircularProgressIndicator(),
+                                       );
+                                     }
+                             }, 
                               image: NetworkImage(
                                 products[position].featuredImage(),
                               ),

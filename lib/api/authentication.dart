@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'api_util.dart';
 import 'dart:convert';
 import 'package:generalshop/exeptions/exeptions.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:connectivity/connectivity.dart';
 class Authentication{
 
@@ -49,7 +50,9 @@ class Authentication{
        case 200:
          var body = jsonDecode(response.body);
          var data = body['data'];
-         return User.fromJson(data);
+         User user = User.fromJson(data);
+         await _saveUser(user.user_id , user.api_token);
+         return user;
          break;
        case 404:
            throw ResourceNotFound('User');
@@ -63,6 +66,10 @@ class Authentication{
      }
   }
 
-
+  Future<void> _saveUser(int userID , String apiToken)async{
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setInt('user_id', userID);
+    sharedPreferences.setString('api_token', apiToken);
+  }
 
 }

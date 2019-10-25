@@ -38,6 +38,8 @@ class GeneralShop extends StatelessWidget{
 
 
         textTheme: TextTheme(
+        
+
           headline: TextStyle(
            fontSize: 18,
            color: ScreenUtilties.textColor,
@@ -65,6 +67,16 @@ class GeneralShop extends StatelessWidget{
            height: 1.5,
            color: ScreenUtilties.darkerGreyText,
            fontFamily: "QuickSand",
+           fontWeight: FontWeight.w700 , 
+         ),
+
+
+         display3: TextStyle(
+           fontSize: 18.0,
+           letterSpacing: 1.5,
+           height: 1.5,
+           color: ScreenUtilties.textColor,
+           fontFamily: "Nunito",
            fontWeight: FontWeight.w700 , 
          ),
         ),

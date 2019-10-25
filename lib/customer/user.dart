@@ -25,7 +25,7 @@ class User{
 
     if(jsonObject['user_id'] == null )        throw PropertyIsRequired('User Id');
     if(jsonObject['first_name'] == null )     throw PropertyIsRequired('First Name');
-    if(jsonObject['Last_name'] == null )      throw PropertyIsRequired('Last Name');
+    if(jsonObject['last_name'] == null )      throw PropertyIsRequired('Last Name');
     if(jsonObject['api_token'] == null )      throw PropertyIsRequired('Api Token');
     if(jsonObject['email'] == null )          throw PropertyIsRequired('Email');
 
