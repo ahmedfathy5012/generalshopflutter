@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:generalshop/product/product.dart';
 import 'package:generalshop/product/product_category.dart';
 import 'package:generalshop/screens/streams/categories_stream.dart';
+import 'cart_screen.dart';
 import 'utilities/screen_utilities.dart';
 import 'utilities/screen_config.dart';
 import 'package:generalshop/api/helpers_api.dart';
@@ -105,6 +106,28 @@ class _HomePageState extends State<HomePage>with TickerProviderStateMixin{
                  vsync: this
                 );
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Text('My Name'),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+              ),
+            ),
+            ListTile(
+              title: Text('Cart'),
+              leading: Icon(Icons.card_travel),
+              trailing: Icon(Icons.arrow_forward_ios),
+              onTap: (){
+                Navigator.pop(context);
+                Navigator.push(context,MaterialPageRoute(builder: (context)=>CartScreen()));
+              },
+            ),
+          ],
+        ),
+      ),
       appBar: AppBar(
          centerTitle: true,       
         title: Text('Home',

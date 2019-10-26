@@ -3,6 +3,7 @@ import 'package:generalshop/product/product.dart';
 import 'package:generalshop/screens/login.dart';
 import 'package:generalshop/screens/utilities/screen_utilities.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:generalshop/api/cart_api.dart';
 
 class SingleProduct extends StatefulWidget {
   final Product product;
@@ -13,6 +14,10 @@ class SingleProduct extends StatefulWidget {
 }
 
 class _SingleProductState extends State<SingleProduct> {
+
+   CartApi cartApi = CartApi();
+   bool _addingToCart = false;  
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +26,7 @@ class _SingleProductState extends State<SingleProduct> {
       ),
       body: _drawScreen(context),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add_shopping_cart),
+        child:(_addingToCart)? CircularProgressIndicator() : Icon(Icons.add_shopping_cart),
         onPressed: () async{
           SharedPreferences pref = await SharedPreferences.getInstance();
           int userId = pref.getInt('user_id');
@@ -30,7 +35,13 @@ class _SingleProductState extends State<SingleProduct> {
             Navigator.push(context,MaterialPageRoute(builder: (context)=>LoginScreen()));
           } else{
             // TODO: Add To Cart
-            print(userId);
+            setState(() {
+             _addingToCart = true; 
+            });
+            await cartApi.addProductToCart(widget.product.product_id);
+             setState(() {
+             _addingToCart = false; 
+            });
           }
           
         },
@@ -38,6 +49,9 @@ class _SingleProductState extends State<SingleProduct> {
     );
   }
 
+
+
+  
   Widget _drawScreen(BuildContext context) {
     return Stack(
       children: <Widget>[

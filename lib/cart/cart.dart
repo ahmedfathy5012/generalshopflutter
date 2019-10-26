@@ -7,7 +7,7 @@ double qty;
 CartItem(this.product,this.qty);
 CartItem.fromJson(Map<String,dynamic> jsonObject){
   this.product = Product.fromJson(jsonObject['product']);
-  this.qty = jsonObject['qty'];
+  this.qty = double.tryParse( jsonObject['qty']);
 }
 }
 
@@ -19,12 +19,13 @@ double total;
 Cart(this.cartItems,this.id,this.total);
 Cart.fromJson(Map<String,dynamic> jsonObject){
 cartItems = [];
-var items = jsonObject['cart_item'];
+var items = jsonObject['cart_items'];
+print('before');
 for(var item in items){
+print('and');
 cartItems.add(CartItem.fromJson(item));
 }
 this.id = jsonObject['id'];
 this.total = jsonObject['total'];
-
 }
 }
